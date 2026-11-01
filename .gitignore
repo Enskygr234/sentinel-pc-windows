@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+build/
+dist/
+portable_build/
+portable_dist/
+release/
+*.spec
+.pytest_cache/
+selftest-*.json
+*.db
