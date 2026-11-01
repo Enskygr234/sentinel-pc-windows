@@ -258,6 +258,12 @@ class ProcInfo:
 
 _ATTRS = ["pid", "name", "username", "cpu_percent", "memory_info", "status"]
 
+STATUS_TR = {
+    "running": "Çalışıyor", "sleeping": "Uykuda", "disk-sleep": "Disk bekliyor", "stopped": "Durduruldu",
+    "tracing-stop": "İzleniyor", "zombie": "Zombi", "dead": "Sonlandı", "wake-kill": "Sonlanıyor",
+    "waking": "Uyanıyor", "idle": "Boşta", "locked": "Kilitli", "waiting": "Bekliyor", "parked": "Park edildi",
+}
+
 
 def list_processes() -> list[ProcInfo]:
     """Çalışan işlemler. CPU yüzdesi mantıksal çekirdek sayısına bölünür (Görev Yöneticisi gibi)."""
@@ -266,6 +272,8 @@ def list_processes() -> list[ProcInfo]:
     for p in psutil.process_iter(_ATTRS):
         try:
             info = p.info
+            if info["pid"] == 0 and os.name == "nt":
+                continue  # "System Idle Process" gerçek bir işlem değildir (boşta kalan CPU payı)
             mem = info.get("memory_info")
             out.append(ProcInfo(
                 pid=info["pid"],
@@ -273,7 +281,7 @@ def list_processes() -> list[ProcInfo]:
                 user=(info.get("username") or "").split("\\")[-1],
                 cpu=(info.get("cpu_percent") or 0.0) / ncpu,
                 memory=mem.rss if mem else 0,
-                status=info.get("status") or "",
+                status=STATUS_TR.get(info.get("status") or "", info.get("status") or ""),
             ))
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
