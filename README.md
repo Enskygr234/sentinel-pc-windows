@@ -15,6 +15,14 @@ Kurulum gerekmez; EXE'yi çalıştırın. Geçmiş kayıtları `%LOCALAPPDATA%\S
 > Windows SmartScreen ilk açılışta uyarı gösterebilir: **Ek bilgi → Yine de çalıştır**.
 > Dosyayı Release'teki `SHA256SUMS.txt` ile doğrulayabilirsiniz.
 
+## Ekran görüntüleri
+
+Derlenen EXE'nin CI'daki self-test çalışması sırasında gerçek Windows üzerinde alınır (`screenshots` dalı):
+
+![Ana ekran](https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/01_dashboard.png)
+
+<p><img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/02_cpu.png" width="270" alt="cpu"> <img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/03_ram.png" width="270" alt="ram"> <img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/04_disk.png" width="270" alt="disk"> <img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/05_network.png" width="270" alt="network"> <img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/06_processes.png" width="270" alt="processes"> <img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/07_sysinfo.png" width="270" alt="sysinfo"> <img src="https://raw.githubusercontent.com/Enskygr234/sentinel-pc-windows/screenshots/08_reports.png" width="270" alt="reports"></p>
+
 ## Özellikler
 
 | Sayfa | İçerik |
@@ -72,7 +80,10 @@ SentinelPC.exe --self-test=rapor.json     # derlenmiş EXE'nin kendi kendini do�
 ## GitHub Actions
 
 `.github/workflows/windows.yml` her push'ta Windows runner'da testleri çalıştırır, PyInstaller ile EXE üretir,
-**EXE'yi `--self-test` ile gerçekten açıp doğrular**, artifact olarak yükler; `v*` etiketinde GitHub Releases'e ekler.
+**EXE'yi `--self-test` ile gerçekten açıp doğrular**, artifact olarak yükler; `VERSION` dosyasındaki sürüm henüz
+yayınlanmamışsa (veya `v*` etiketi gönderildiğinde) GitHub Releases'e ekler ve sayfa görüntülerini `screenshots` dalına yayınlar.
+
+Yeni sürüm için `VERSION`, `sentinel/__init__.py` ve `version_info.txt` içindeki sürümü artırıp `main`'e gönderin.
 
 ## Proje yapısı
 
