@@ -20,7 +20,7 @@ def test_full_self_test(tmp_path):
     code = run_self_test(app, str(out))
     report = json.loads(out.read_text(encoding="utf-8"))
     for r in report["results"]:
-        print(("✓ " if r["ok"] else "✗ ") + r["test"], r.get("detail", ""), r.get("error", ""))
+        print(("[OK] " if r["ok"] else "[HATA] ") + r["test"], r.get("detail", ""), r.get("error", ""))
     failures = [f"{r['test']}: {r.get('error')}\n{r.get('trace', '')}" for r in report["results"] if not r["ok"]]
     assert code == 0, "\n\n".join(failures)
     assert report["total"] >= 10
