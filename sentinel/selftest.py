@@ -143,6 +143,20 @@ def run_self_test(app, out_path: str = "") -> int:
             _assert("SİSTEM RAPORU" in text and "Anlık durum" in text, "rapor")
             return f"{store.count()} kayıt, CSV {n} satır"
         check("raporlama ve CSV", reports)
+
+        shot_dir = os.environ.get("SENTINEL_SCREENSHOT_DIR")
+        if shot_dir:
+            def screenshots():
+                os.makedirs(shot_dir, exist_ok=True)
+                win.resize(1280, 820)
+                saved = 0
+                for i, (key, _) in enumerate(NAV):
+                    win.navigate(key)
+                    pump(1500)
+                    if win.grab().save(os.path.join(shot_dir, f"{i + 1:02d}_{key}.png")):
+                        saved += 1
+                _assert(saved == len(NAV), "ekran görüntüsü kaydedilemedi")
+            check("ekran görüntüleri", screenshots)
     except Exception as e:  # noqa: BLE001
         results.append({"test": "başlatma", "ok": False, "error": str(e), "trace": traceback.format_exc()})
     finally:

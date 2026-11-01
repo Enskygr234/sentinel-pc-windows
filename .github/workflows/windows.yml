@@ -50,6 +50,8 @@ jobs:
           --version-file version_info.txt run.py
 
       - name: EXE açılış testi (gerçek donanım verisiyle)
+        env:
+          SENTINEL_SCREENSHOT_DIR: ${{ github.workspace }}\screenshots
         run: |
           $out = Join-Path $PWD "selftest-exe.json"
           $p = Start-Process -FilePath "dist\SentinelPC.exe" -ArgumentList "--self-test=$out" -Wait -PassThru
@@ -78,7 +80,9 @@ jobs:
         if: always()
         with:
           name: selftest-report
-          path: selftest-*.json
+          path: |
+            selftest-*.json
+            screenshots/
           if-no-files-found: ignore
 
   release:
